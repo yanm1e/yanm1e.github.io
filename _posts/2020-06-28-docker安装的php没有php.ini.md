@@ -7,7 +7,7 @@ author:     yanmie             # 作者
 header-img: img/.jpg    ##标签这篇文章标题背景图片
 catalog: true                       # 是否归档
 tags:                               
-    - 网络安全
+    - sqli-labs
   
 ---
 
