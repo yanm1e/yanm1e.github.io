@@ -419,7 +419,7 @@ auto_prepend_file=2.png（这一句即可）
 
 直接将php后缀大写绕过即可。
 
-## Pass-07
+## Pass-06
 
 	$is_upload = false;
 	$msg = null;

@@ -720,3 +720,118 @@ class MyUpload{
 先先移动文件，后重命名，所以我们我也可以利用条件竞争，在没有重命名之前将它访问到。
 
 而这里用到了白名单验证，肯定是上传不了php后缀的，但我们看到有个`7z`后缀，是apache无法解析的，所以可以利用apache解析漏洞(nginx也可以)配合条件竞争上传。
+
+
+
+## Pass-19
+
+
+```
+$is_upload = false;
+$msg = null;
+if (isset($_POST['submit'])) {
+    if (file_exists(UPLOAD_PATH)) {
+        $deny_ext = array("php","php5","php4","php3","php2","html","htm","phtml","pht","jsp","jspa","jspx","jsw","jsv","jspf","jtml","asp","aspx","asa","asax","ascx","ashx","asmx","cer","swf","htaccess");
+
+        $file_name = $_POST['save_name'];
+        $file_ext = pathinfo($file_name,PATHINFO_EXTENSION);
+
+        if(!in_array($file_ext,$deny_ext)) {
+            $temp_file = $_FILES['upload_file']['tmp_name'];
+            $img_path = UPLOAD_PATH . '/' .$file_name;
+            if (move_uploaded_file($temp_file, $img_path)) { 
+                $is_upload = true;
+            }else{
+                $msg = '上传出错！';
+            }
+        }else{
+            $msg = '禁止保存为该类型文件！';
+        }
+
+    } else {
+        $msg = UPLOAD_PATH . '文件夹不存在,请手工创建！';
+    }
+}
+```
+
+`pathinfo()` 返回一个关联数组包含有 path 的信息。返回关联数组还是字符串取决于 options。 
+
+看例子，即可知道此关`pathinfo($file_name,PATHINFO_EXTENSION);`得到的是后缀。
+
+![U85Kqf.png](https://s1.ax1x.com/2020/07/12/U85Kqf.png)
+
+代码审计，post传数据，此关依旧可以00绕过。
+
+![U85hdO.png](https://s1.ax1x.com/2020/07/12/U85hdO.png)
+
+在windows环境中也可以大小谢绕过。
+
+`move_uploaded_file`会忽略掉文件末尾的`/.`
+
+所以可以构造`save_path=shell.php/.`,这样`file_ext`值就为空，就能绕过黑名单，而`move_uploaded_file`函数忽略文件末尾的`/.`可以实现保存文件为`.php`.
+
+## Pass-20
+
+
+```
+$is_upload = false;
+$msg = null;
+if(!empty($_FILES['upload_file'])){
+    //检查MIME
+    $allow_type = array('image/jpeg','image/png','image/gif');
+    if(!in_array($_FILES['upload_file']['type'],$allow_type)){
+        $msg = "禁止上传该类型文件!";
+    }else{
+        //检查文件名
+        $file = empty($_POST['save_name']) ? $_FILES['upload_file']['name'] : $_POST['save_name'];
+        if (!is_array($file)) {
+            $file = explode('.', strtolower($file));
+        }
+
+        $ext = end($file);
+        $allow_suffix = array('jpg','png','gif');
+        if (!in_array($ext, $allow_suffix)) {
+            $msg = "禁止上传该后缀文件!";
+        }else{
+            $file_name = reset($file) . '.' . $file[count($file) - 1];
+            $temp_file = $_FILES['upload_file']['tmp_name'];
+            $img_path = UPLOAD_PATH . '/' .$file_name;
+            if (move_uploaded_file($temp_file, $img_path)) {
+                $msg = "文件上传成功！";
+                $is_upload = true;
+            } else {
+                $msg = "文件上传失败！";
+            }
+        }
+    }
+}else{
+    $msg = "请选择要上传的文件！";
+}
+```
+
+代码审计，首先，判断文件的`Content-Type`类型是否在白名单中，如果不在禁止上传，如果在的话，继续往下执行。
+
+如果post接收的`save_name`为空，则赋值为`$_FILES['upload_file']['name']`,不为空就为本身。
+
+* `explode()` 函数把字符串打散为数组。
+* `end()` 将 array 的内部指针移动到最后一个单元并返回其值。 
+* `reset()` 将 array 的内部指针倒回到第一个单元并返回第一个数组单元的值。 
+* `count` — 计算数组中的单元数目，或对象中的属性个数,这里要注意，数组下标从0开始。
+
+继续执行，如果`$file`不是数组则打乱成数组，如果是就往下执行。
+
+利用`end`函数将`$file`数组的最后一个单位赋值给`$ext`。
+
+之后判断`$ext`是否在白名单内。在的话继续往下执行。
+
+将`file`数组的第一个元素用`点`拼接最后一个元素，赋值给`$file_name`,之后上传。
+
+这一关我们可以`数组+/.`绕过。(先改MIME类型)
+
+`cout`检测的是个数，而不会检测数组键值的多少，`end`直接返回键值的最后一个。
+
+所以我们构造`$file_name[0]=upload20.php``$file_name[2]=jpg`.
+
+这样它检测后缀的时候是检测的`jpg`,拼接名字的时候拼接的`$file_name`,而它为空，最后成了`upload0.php/.`,成功绕过。
+
+![UG26c6.png](https://s1.ax1x.com/2020/07/13/UG26c6.png)
