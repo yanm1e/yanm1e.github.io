@@ -146,3 +146,5 @@ Public属性 ： 数据类型:属性名长度:&quot;属性名&quot;;数据类型
 输出到命令行的序列化字符串格式已经被破坏 ， 因此必须要在脚本中直接构造出完整的 Exp
 
 参考：https://www.guildhab.top/?p=990
+
+反序列化漏洞： https://www.jianshu.com/p/1d2c65601d2a
