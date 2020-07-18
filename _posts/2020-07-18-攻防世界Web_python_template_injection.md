@@ -83,7 +83,7 @@ def user_login():
 
 `/templates/index.html` :
 
-`<h1>{{content}}</h1>`
+	内容： <h1>{{content}}</h1>
 
 
 这个时候页面仍然输出`This is index page`。
