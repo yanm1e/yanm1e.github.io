@@ -64,9 +64,7 @@ def user_login():
 
 `/templates/index.html` :
 
-```
 <h1>This is index page</h1>
-```
 
 访问`127.0.0.1:5000/index/`的时候，flask就会渲染出index.html的页面。
 
