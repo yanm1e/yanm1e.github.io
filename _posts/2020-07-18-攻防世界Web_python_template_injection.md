@@ -83,8 +83,8 @@ def user_login():
 
 `/templates/index.html` :
 
-	内容： <h1>{{content}}</h1>
-
+	
+![U2PHfS.png](https://s1.ax1x.com/2020/07/18/U2PHfS.png)
 
 这个时候页面仍然输出`This is index page`。
 
