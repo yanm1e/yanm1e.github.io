@@ -83,9 +83,10 @@ def user_login():
 
 `/templates/index.html` :
 
+	
 	<h1>{{content}}</h1>
 
-这个时候页面仍然输出This is index page。
+这个时候页面仍然输出`This is index page`。
 
 {{}}在Jinja2中作为变量包裹标识符。
 
