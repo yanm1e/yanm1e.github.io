@@ -17,10 +17,10 @@ sidebar-avatar: /img/about_yanmie.jpeg      # use absolute URL, seeing it's used
 
 
 # SNS settings
-RSS: false
+RSS: true
 # weibo_username:     yanmie
 #zhihu_username:     yanmie
-#github_username:    yanmie
+github_username:    yanmie-art
 #facebook_username:  yanmie
 #jianshu_username:   yanmie
 #twitter_username:   qiubaiying
@@ -101,5 +101,9 @@ friends: [
     {
         title: "yanmie",
         href: "https://yanmie-art.github.io/"
-    }
+    },
+   {
+        title: "聂总",
+        href: "https://al0neranger.github.io/"
+   }
 ]
