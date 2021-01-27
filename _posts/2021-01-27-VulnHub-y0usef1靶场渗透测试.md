@@ -1,3 +1,19 @@
+---
+layout:  post    # 使用的布局（不需要改）
+title:   VulnHub-y0usef1靶场渗透测试   # 标题 
+subtitle:    #副标题
+date:  2021-01-27  # 时间
+author:  yanmie    # 作者
+header-img: img/.jpg ##标签这篇文章标题背景图片
+catalog: true      # 是否归档
+tags:        
+    - Vulnhub
+
+
+---
+
+
+
 ### About Release
 
 * **Name**: y0usef: 1
@@ -71,6 +87,7 @@ nmap 端口扫描分成六个状态:
 使用 TCP 进行扫描
 ![图片.png](https://image.3001.net/images/20210115/1610689948_60012d9c119f7cd565163.png!small)
 发现 80 端口和 22 端口开放。在渗透测试过程中，单单经考单一的方法是不够的，需要多种方法结合起来才能展现最佳效果。
+
 #### 3. 服务探测
 这里我们直接先开始探测 靶机 80 端口。
 这里也可以使用 `nmap` 进行服务版本探测
@@ -84,17 +101,17 @@ php 站，（此插件为 Wappalyzer）
 
 #### 4. 目录扫描
 
-![image-20210115140906003](C:%5CUsers%5C51946%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20210115140906003.png)
+![image-20210115140906003](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210115140906003.png)
 
 发现有个目录比较特殊，访问一下，
 
-![image-20210115141045878](C:%5CUsers%5C51946%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20210115141045878.png)
+![image-20210115141045878](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210115141045878.png)
 
 确实很特殊，应为这个是代码限制的访问的。
 
 ok,这应该是个管理目录，既然是代码限制，所以尝试 XFF 伪造 `127.0.0.1` ,
 
-![image-20210115141213091](C:%5CUsers%5C51946%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20210115141213091.png)
+![image-20210115141213091](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210115141213091.png)
 
 成功伪造。（此插件为 `X-Forwarded-For Header`）
 
@@ -110,19 +127,19 @@ ok,这应该是个管理目录，既然是代码限制，所以尝试 XFF 伪造
 
 进入后台，发现一处可以上传文件的操作
 
-![image-20210115141459502](C:%5CUsers%5C51946%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20210115141459502.png)
+![image-20210115141459502](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210115141459502.png)
 
 直接上传 php 马被限制，那就进行绕过。
 
 修改`Content-Type` 即可绕过。 
 
-![image-20210115141615387](C:%5CUsers%5C51946%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20210115141615387.png)
+![image-20210115141615387](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210115141615387.png)
 
 并且返回了路径。
 
 蚁剑上手。
 
-![image-20210115141906389](C:%5CUsers%5C51946%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20210115141906389.png)
+![image-20210115141906389](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210115141906389.png)
 
 想去 root 目录看看但是没权限。
 
@@ -148,7 +165,7 @@ pass : yousef123
 
 最简单的 前面加 `sudo`
 
-![image-20210115142958283](C:%5CUsers%5C51946%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20210115142958283.png)
+![image-20210115142958283](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210115142958283.png)
 
 还可以 `sudo su ` 输入当前用户`yousef` 密码即可成为root.
 
