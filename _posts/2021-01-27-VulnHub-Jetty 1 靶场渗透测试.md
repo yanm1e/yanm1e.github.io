@@ -9,8 +9,6 @@ catalog: true      # 是否归档
 tags:        
     - Vulnhub
 
-
-
 ---
 
 靶机信息：
@@ -31,7 +29,7 @@ tags:
 nmap -sP 192.168.56.1/24
  ```
 
-![image-20210126172801126](img/image-20210126172801126.png)
+![image-20210126172801126](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126172801126.png)
 
 #### 1.2 扫描端口
 
@@ -64,7 +62,7 @@ http://192.168.56.105/
 
 
 
-![image-20210126174018670](img/image-20210126174018670.png)
+![image-20210126174018670](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126174018670.png)
 
 访问 `robots.txt`
 
@@ -84,7 +82,7 @@ Disallow: /admin/secret
 ftp://192.168.56.105/
 ```
 
-![image-20210126174459360](img/image-20210126174459360.png)
+![image-20210126174459360](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126174459360.png)
 
 README.TXT 内容：
 
@@ -149,9 +147,9 @@ python一句话弹升级交互式也失败，但是在python交互界面成功�
 >>> pty.spawn("/bin/bash")
 ```
 
-![image-20210126200328538](img/image-20210126200328538.png)
+![image-20210126200328538](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126200328538.png)
 
-![image-20210126200447978](img/image-20210126200447978.png)
+![image-20210126200447978](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126200447978.png)
 
 成功突破限制。
 
@@ -159,7 +157,7 @@ python一句话弹升级交互式也失败，但是在python交互界面成功�
 
 直接 `sudo -l`
 
-![image-20210126201744737](img/image-20210126201744737.png)
+![image-20210126201744737](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126201744737.png)
 
 发现可以以 root 身份执行 find 命令.
 
@@ -177,7 +175,7 @@ sudo find /home -exec /bin/bash \;
 
 查看定时任务
 
-![image-20210126202214746](img/image-20210126202214746.png)
+![image-20210126202214746](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126202214746.png)
 
 发现有定时任务。
 
@@ -192,7 +190,7 @@ rsync -raz /root/Documents/.docs /var/backups/
 chmod 700 /var/backups/.docs
 ```
 
-![image-20210126210700528](img/image-20210126210700528.png)
+![image-20210126210700528](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126210700528.png)
 
 目录下有很多表格，将其打包，然后开启 http服务(python2)
 
@@ -202,11 +200,11 @@ python -m SimpleHTTPServer 8000
 
 
 
-![image-20210126210949592](img/image-20210126210949592.png)
+![image-20210126210949592](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126210949592.png)
 
 kali中下载
 
-![image-20210126211103094](img/image-20210126211103094.png)
+![image-20210126211103094](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126211103094.png)
 
 成功下载，接下来解压
 
@@ -216,16 +214,211 @@ unzip doc.zip -d doc/
 
 尝试打开文档，但是发现被加密了
 
-![image-20210126211822248](img/image-20210126211822248.png)
+![image-20210126211822248](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126211822248.png)
 
 在`Password_keeper` 文件夹下发现，有个exe 文件，还有`database.txt` ，`usage.txt` ,相关联，不能发现是 exe 对表格进行的加密。
 
-![image-20210126212000317](img/image-20210126212000317.png)
+![image-20210126212000317](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126212000317.png)
 
 base64解码是乱码。database.txt里面保存着密文，那么关键就是password_keeper.exe程序了。
 
-![image-20210126212359537](img/image-20210126212359537.png)
+![image-20210126212359537](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126212359537.png)
 
 运行软件发现， 1 功能可以查看密码，但是还需要密码验证。
 
+从前面的usage里面和这个exe文件的图标可以知道它是pyinstaller打包的程序，
+
+使用 `pyinstxtractor.py` 反编译。
+
+[下载地址](https://sourceforge.net/projects/pyinstallerextractor/)
+
+将pyinstxtractor.py文件和程序放在同一文件夹下，使用python pyinstxtractor.py password_keeper.exe命令，就会在同一目录下产生一个password_keeper.exe_extracted目录，
+
+![image-20210127121146991](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210127121146991.png)
+
+![image-20210127120856953](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210127120856953.png)
+
+其中 `password_keeper` 就是我们所需要的 pyc 文件，增加后缀 `pyc` .
+
+反编译网址:http://tools.bugscaner.com/decompyle/
+
+但是直接编译会报错，
+
+![image-20210127121957167](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210127121957167.png)
+
+我们找到 `struct`,我们给他加上后缀`.pyc`反编译试试。发现成功反编译出如下内容：
+
+![image-20210127122112274](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210127122112274.png)
+
+成功编译，
+
+是因为 `password_keeper.pyc` 缺少一些字节导致编译失败的。
+
+![image-20210127122455380](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210127122455380.png)
+
+缺少了7 字节，我们把它补上去，
+
+![image-20210127122618983](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210127122618983.png)
+
+再去反编译一下，成功编译：
+
+```python
+#! /usr/bin/env python 2.7 (62211)
+#coding=utf-8
+# Compiled at: 1995-09-27 11:18:56
+#Powered by BugScaner
+#http://tools.bugscaner.com/
+#如果觉得不错,请分享给你朋友使用吧!
+from Cryptodome.Cipher import AES
+import base64
+BS = 16
+pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS)
+unpad = lambda s: s[0:-ord(s[-1])]
+ 
+def cipher_message(key, message, iv):
+    message = pad(message)
+    key = base64.b64decode(key)
+    obj = AES.new(key, AES.MODE_CBC, iv)
+    ciphertext = obj.encrypt(message)
+    ciphertext = base64.b64encode(ciphertext)
+    return ciphertext
+ 
+ 
+def decipher_message(key, ciphertext, iv):
+    ciphertext = base64.b64decode(ciphertext)
+    key = base64.b64decode(key)
+    obj2 = AES.new(key, AES.MODE_CBC, iv)
+    decipher_text = obj2.decrypt(ciphertext)
+    decipher_text = unpad(decipher_text)
+    return decipher_text
+ 
+ 
+def generate_key(ciphertext, tag, key, iv):
+    ciphertext = cipher_message(key, ciphertext, iv)
+    print ''
+    print "Now copy this into your database.txt (It's the free version... pay for an automated tool!)"
+    print ''
+    print 'Tag Password'
+    print tag + ' ' + ciphertext
+ 
+ 
+def show_keys(database, key, iv):
+    check_permissions = raw_input('Insert password: ')
+    if base64.b64encode(check_permissions) == key:
+        for i in range(len(database[0])):
+            ciphertext = database[1][i]
+            decipher = decipher_message(key, ciphertext, iv)
+            print ' '
+            print 'Tag: ' + database[0][i] + ' Password: ' + decipher
+            print ' '
+ 
+    else:
+        print ''
+        print 'Tag: Instagram Password: WRONG '
+        print 'Tag: Facebook  Password: PASSWORD '
+        print 'Tag: SSH       Password: TRY '
+        print 'Tag: root      Password: HARDER! '
+        print ''
+ 
+ 
+def read_database():
+    database = [[], []]
+    f = open('database.txt', 'r')
+    for line in f.readlines():
+        line = line.strip().split()
+        database[0].append(line[0])
+        database[1].append(line[1])
+ 
+    f.close()
+    return database
+ 
+ 
+def main():
+    print 'Welcome to the best password keeper ever!'
+    print '__        __         _                _  __                         '
+    print '\\ \\      / /__  __ _| | ___   _      | |/ /___  ___ _ __   ___ _ __ '
+    print " \\ \\ /\\ / / _ \\/ _` | |/ / | | |_____| ' // _ \\/ _ \\ '_ \\ / _ \\ '__|"
+    print '  \\ V  V /  __/ (_| |   <| |_| |_____| . \\  __/  __/ |_) |  __/ |   '
+    print '   \\_/\\_/ \\___|\\__,_|_|\\_\\__,  |     |_|\\_\\___|\\___| .__/ \\___|_|   '
+    print '                          |___/                    |_|   '
+    iv = '166fe2294df5d0f3'
+    key = 'N2FlMjE4ZmYyOTI4ZjZiMg=='
+    database = read_database()
+    loop = True
+    while loop:
+        print ''
+        print 'Choose what you want to do: '
+        print '1) See your passwords!'
+        print '2) Generate a cipher-password'
+        print '3) Close'
+        option = raw_input('Insert your selection here --> ')
+        if option == '1':
+            print ''
+            print 'Showing content of your secret passwords...'
+            print ''
+            show_keys(database, key, iv)
+            print ''
+            returned = raw_input('Press any button to return to the menu...')
+        elif option == '2':
+            print ''
+            print ''
+            title = raw_input('Type the name of the application: ')
+            password = raw_input('Type the password(BEWARE OF SHOULDER SURFING!!!): ')
+            generate_key(password, title, key, iv)
+            print ''
+            print ''
+            returned = raw_input('Press any button to return to the menu...')
+        else:
+            if option == '3':
+                loop = False
+                print ''
+                return 'Bye Byeeeeeeeeeeeee'
+            print ''
+            print ''
+            print 'WHAT? FAILURE TO COMMUNICATE... Reseting connection...'
+            print ''
+            print ''
+            returned = raw_input('Press any button to return to the menu...')
+ 
+ 
+if __name__ == '__main__':
+    print main()
+```
+
+我们输入 1 后执行函数 `show_keys` ,将我们输入的密码 base64 编码后与 `key` 进行比较，
+
+`key = 'N2FlMjE4ZmYyOTI4ZjZiMg=='` ,将 key base64 解码得到`7ae218ff2928f6b2`,
+
+```python
+def show_keys(database, key, iv):
+    check_permissions = raw_input('Insert password: ')
+    if base64.b64encode(check_permissions) == key:
+        for i in range(len(database[0])):
+            ciphertext = database[1][i]
+            decipher = decipher_message(key, ciphertext, iv)
+            print ' '
+            print 'Tag: ' + database[0][i] + ' Password: ' + decipher
+            print ' '
+```
+
+![image-20210127123359814](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210127123359814.png)
+
+得到密码，打开文件，
+
+取证：
+
+MoneyBalance.xlsx：C5Y0wzGqq4Xw8XGD，总共赚的钱，11月赚了140欧元
+
+![image-20210127123945611](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210127123945611.png)
+
+AccountabiltyReportMorning-1112018.xlsx：没有密码，因为这个是给老板看的修改过后的正常的账单
+
+Accountabilty_not_cooked.xlsx：co8oiads13kt，未修改过的账单
+
+Pending_to_erase.xlsx: 1hi2ChHrtkQsUTOc，准备消除证据的表格
+
+参考文章：
+
 https://www.cnblogs.com/backlion/p/10504003.html
+
+https://zhuanlan.zhihu.com/p/109266820

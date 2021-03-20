@@ -16,7 +16,7 @@
 nmap -sP 192.168.56.1/24
  ```
 
-![image-20210126172801126](img/image-20210126172801126.png)
+![image-20210126172801126](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126172801126.png)
 
 #### 1.2 扫描端口
 
@@ -49,7 +49,7 @@ http://192.168.56.105/
 
 
 
-![image-20210126174018670](img/image-20210126174018670.png)
+![image-20210126174018670](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126174018670.png)
 
 访问 `robots.txt`
 
@@ -69,7 +69,7 @@ Disallow: /admin/secret
 ftp://192.168.56.105/
 ```
 
-![image-20210126174459360](img/image-20210126174459360.png)
+![image-20210126174459360](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126174459360.png)
 
 README.TXT 内容：
 
@@ -134,9 +134,9 @@ python一句话弹升级交互式也失败，但是在python交互界面成功�
 >>> pty.spawn("/bin/bash")
 ```
 
-![image-20210126200328538](img/image-20210126200328538.png)
+![image-20210126200328538](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126200328538.png)
 
-![image-20210126200447978](img/image-20210126200447978.png)
+![image-20210126200447978](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126200447978.png)
 
 成功突破限制。
 
@@ -144,7 +144,7 @@ python一句话弹升级交互式也失败，但是在python交互界面成功�
 
 直接 `sudo -l`
 
-![image-20210126201744737](img/image-20210126201744737.png)
+![image-20210126201744737](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126201744737.png)
 
 发现可以以 root 身份执行 find 命令.
 
@@ -162,7 +162,7 @@ sudo find /home -exec /bin/bash \;
 
 查看定时任务
 
-![image-20210126202214746](img/image-20210126202214746.png)
+![image-20210126202214746](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126202214746.png)
 
 发现有定时任务。
 
@@ -177,7 +177,7 @@ rsync -raz /root/Documents/.docs /var/backups/
 chmod 700 /var/backups/.docs
 ```
 
-![image-20210126210700528](img/image-20210126210700528.png)
+![image-20210126210700528](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126210700528.png)
 
 目录下有很多表格，将其打包，然后开启 http服务(python2)
 
@@ -187,11 +187,11 @@ python -m SimpleHTTPServer 8000
 
 
 
-![image-20210126210949592](img/image-20210126210949592.png)
+![image-20210126210949592](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126210949592.png)
 
 kali中下载
 
-![image-20210126211103094](img/image-20210126211103094.png)
+![image-20210126211103094](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126211103094.png)
 
 成功下载，接下来解压
 
@@ -201,15 +201,15 @@ unzip doc.zip -d doc/
 
 尝试打开文档，但是发现被加密了
 
-![image-20210126211822248](img/image-20210126211822248.png)
+![image-20210126211822248](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126211822248.png)
 
 在`Password_keeper` 文件夹下发现，有个exe 文件，还有`database.txt` ，`usage.txt` ,相关联，不能发现是 exe 对表格进行的加密。
 
-![image-20210126212000317](img/image-20210126212000317.png)
+![image-20210126212000317](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126212000317.png)
 
 base64解码是乱码。database.txt里面保存着密文，那么关键就是password_keeper.exe程序了。
 
-![image-20210126212359537](img/image-20210126212359537.png)
+![image-20210126212359537](https://gitee.com/luo_fan_1/yanmie-art/raw/master/img/image-20210126212359537.png)
 
 运行软件发现， 1 功能可以查看密码，但是还需要密码验证。
 
